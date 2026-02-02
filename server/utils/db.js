@@ -7,7 +7,7 @@ const URI = "mongodb://localhost:27017/MernSeries2026";
 const connectDB = async ()=> {
     try{
         await mongoose.connect(URI)
-        console.log("Connection sucessful to DB")
+        console.log("Connection sucessfully to DB")
     }
     catch(error){
         console.log("database connection error", error.message)
