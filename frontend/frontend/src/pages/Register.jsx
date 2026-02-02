@@ -1,13 +1,17 @@
 
 import { useState } from "react";
+import {useNavigate} from "react-router-dom"
+
 import Img from "../assets/register.jpg";
 export default function Register() {
 
+  const navigate = useNavigate()
+
   const [user, setUser] = useState({
-    fullname: "",
+    username: "",
     email: "",
     password: "",
-    confPassword: ""
+    phone: ""
   })
 
   const handleChange = (e) => {
@@ -20,9 +24,29 @@ export default function Register() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user)
+    // console.log(user)
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: "POST",
+        headers: {
+          'Content-Type': "application/json",
+        },
+        body: JSON.stringify(user)
+      })
+      console.log(response)
+      if (response.ok) {
+        setUser({ username: "", email: "", password: "", phone: "" })
+        navigate("/login")
+      }
+
+    }
+    catch (error) {
+      console.log("register", error)
+    }
+
+
   }
 
   return (
@@ -44,18 +68,18 @@ export default function Register() {
           className="bg-white text-gray-500 w-full max-w-md p-8 text-left text-sm rounded-xl shadow-xl">
 
           <h2 className="text-3xl font-semibold mb-8 text-center text-gray-800">
-            Create Account
+            Registration Now
           </h2>
-
+          <p>username *</p>
           <input
             className="w-full border my-3 border-gray-300 outline-none rounded-full py-3 px-5"
-            name="fullname"
+            name="username"
             type="text"
             placeholder="Enter your full name"
             required
             onChange={handleChange}
           />
-
+          <p>email *</p>
           <input
             className="w-full border my-3 border-gray-300 outline-none rounded-full py-3 px-5"
             name="email"
@@ -64,7 +88,7 @@ export default function Register() {
             required
             onChange={handleChange}
           />
-
+          <p>password *</p>
           <input
             className="w-full border my-3 border-gray-300 outline-none rounded-full py-3 px-5"
             name="password"
@@ -73,12 +97,12 @@ export default function Register() {
             required
             onChange={handleChange}
           />
-
+          <p>phone *</p>
           <input
             className="w-full border my-3 border-gray-300 outline-none rounded-full py-3 px-5"
-            name="confPassword"
-            type="password"
-            placeholder="Confirm password"
+            name="phone"
+            type="number"
+            placeholder="Type phone number"
             required
             onChange={handleChange}
           />
@@ -88,7 +112,7 @@ export default function Register() {
             type="submit"
             className="w-full mt-6 mb-3 bg-indigo-500 hover:bg-indigo-600 active:scale-95 transition py-3 rounded-full text-white text-lg"
           >
-            Sign Up
+            Register Now
           </button>
 
           <p className="text-center mt-4 text-sm">
