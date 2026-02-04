@@ -6,6 +6,7 @@ import Services from './pages/Services'
 import Contact from './pages/Contact'
 import Register from './pages/Register'
 import Login from './pages/Login'
+import Logout from './pages/Logout'
 import Navbar from './components/Navbar'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
               <Route path='/contact' element={ <Contact/> } />
               <Route path='/register' element={ <Register/> } />
               <Route path='/login' element={ <Login/> } />
+              <Route path='/logout' element={ <Logout/> } />
           </Routes>
       </BrowserRouter>
     </div>

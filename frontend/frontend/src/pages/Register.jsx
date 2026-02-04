@@ -1,11 +1,13 @@
 
 import { useState } from "react";
 import {useNavigate} from "react-router-dom"
+import { useAuth } from "../store/auth";
 
 import Img from "../assets/register.jpg";
 export default function Register() {
 
   const navigate = useNavigate()
+  const {storetokenInLS} = useAuth()
 
   const [user, setUser] = useState({
     username: "",
@@ -37,7 +39,13 @@ export default function Register() {
       })
       console.log(response)
       if (response.ok) {
-        setUser({ username: "", email: "", password: "", phone: "" })
+        // token
+        const res_data = await response.json();
+        console.log("res fron server" , res_data)
+        storetokenInLS(res_data.token)
+      //  localStorage.setItem("token" ,res_data)   storing the token into localStorage
+        
+        setUser({ username: "", email: "", password: "", phone: "" })  // user input field clear
         navigate("/login")
       }
 

@@ -1,7 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../store/auth";
 import Navbar from "../components/Navbar";
 
 export default function Login() {
+
+  const navigate = useNavigate()
+  const {storetokenInLS} = useAuth()
 
   const [user, setUser] = useState({
     email: "",
@@ -16,9 +21,34 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);   // 👈 yaha data milega
+    console.log(user);   // yaha data milega
+    try {
+        const response = await fetch("http://localhost:5000/api/auth/login" , {
+      method:"POST",
+      headers :{
+        "Content-Type" : "application/json"
+      } ,
+      body : JSON.stringify(user)
+    })
+    console.log(response)
+    if(response.ok) {
+      alert("Login successfull")
+      const res_data = await response.json();
+      console.log("res fron server" , res_data)
+      storetokenInLS(res_data.token)
+      //localStorage.setItem("token" ,res_data.token)   storing the token into localStorage
+
+      setUser({email: "",password: ""})
+      navigate("/")
+
+    }
+    }
+    catch(error) {
+      console.log("login" , error)
+    }
+  
   };
 
   return (
