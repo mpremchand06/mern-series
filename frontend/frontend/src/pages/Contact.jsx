@@ -1,29 +1,43 @@
 import { useState } from "react";
 
 export default function Contact() {
+  const [contact, setContact] = useState({
+    username: "",
+    email: "",
+    message: ""
+  });
 
-const [user , setUser] = useState({
-  name: "",
-  email:"",
-  phone:"",
-  textarea: ""
-})
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setContact({
+      ...contact,
+      [name]: value
+    });
+  };
 
-const handleChange = (e)=> {
- const input = e.target
- const key = input.name
- const value = input.value
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
- setUser( {
-  ...user,
-  [key] : value
- })
-}
+    try {
+      const response = await fetch("http://localhost:5000/api/form/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contact)
+      });
 
-const handleSubmit = (e)=> {
-  e.preventDefault()
-  console.log(user)
-}
+      if (response.ok) {
+        setContact({
+          username: "",
+          email: "",
+          message: ""
+        });
+        const data = await response.json();
+        console.log("Contact Form Submitted Successfully", data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex h-[700px] w-full">
@@ -37,72 +51,53 @@ const handleSubmit = (e)=> {
       </div>
 
       {/* Right Form */}
-      <div className="w-full flex flex-col items-center justify-center">
+      <div className="w-full flex items-center justify-center">
         <form
-        onSubmit={handleSubmit}
-         className="md:w-96 w-80 flex flex-col items-center justify-center">
-          <h2 className="text-4xl text-gray-900 font-medium">
-            Contact Us
-          </h2>
-          <p className="text-sm text-gray-500/90 mt-3">
+          onSubmit={handleSubmit}
+          className="md:w-96 w-80 flex flex-col items-center"
+        >
+          <h2 className="text-4xl font-medium">Contact Us</h2>
+          <p className="text-sm text-gray-500 mt-3">
             We would love to hear from you
           </p>
 
-          {/* Name */}
-          <div className="flex items-center w-full mt-8 border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6">
-            <input
-              name="name"
-              type="text"
-              placeholder="Your Name"
-              className="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
-              required
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            name="username"
+            value={contact.username}
+            onChange={handleChange}
+            placeholder="Your Name"
+            className="mt-8 w-full h-12 pl-6 border rounded-full outline-none"
+            required
+          />
 
-          {/* Email */}
-          <div className="flex items-center w-full mt-5 border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6">
-            <input
-              email="email"
-              type="email"
-              placeholder="Your Email"
-              className="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
-              required
-              onChange={handleChange}
-            />
-          </div>
+          <input
+            name="email"
+            type="email"
+            value={contact.email}
+            onChange={handleChange}
+            placeholder="Your Email"
+            className="mt-5 w-full h-12 pl-6 border rounded-full outline-none"
+            required
+          />
 
-          {/* Phone */}
-          <div className="flex items-center w-full mt-5 border border-gray-300/60 h-12 rounded-full overflow-hidden pl-6">
-            <input
-              name="phone"
-              type="tel"
-              placeholder="Your Phone"
-              className="bg-transparent text-gray-500/80 placeholder-gray-500/80 outline-none text-sm w-full h-full"
-              required
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Message */}
           <textarea
-            name="textarea"
+            name="message"
+            value={contact.textarea}
+            onChange={handleChange}
             placeholder="Your Message"
             rows="4"
-            className="w-full mt-5 border border-gray-300/60 rounded-xl p-4 text-gray-500/80 placeholder-gray-500/80 outline-none text-sm resize-none"
+            className="mt-5 w-full border rounded-xl p-4 outline-none resize-none"
             required
-            onChange={handleChange}
-          ></textarea>
+          />
 
-          {/* Submit Button */}
           <button
             type="submit"
-            className="mt-8 w-full h-11 rounded-full text-white bg-indigo-500 hover:opacity-90 transition-opacity"
+            className="mt-8 w-full h-11 bg-indigo-500 text-white rounded-full"
           >
             Send Message
           </button>
 
-          <p className="text-gray-500/90 text-sm mt-4">
+          <p className="text-sm text-gray-500 mt-4">
             We will get back to you shortly 😊
           </p>
         </form>
