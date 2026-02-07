@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
+import { toast } from 'react-toastify';
 import Navbar from "../components/Navbar";
 
 export default function Login() {
@@ -33,9 +34,10 @@ export default function Login() {
       body : JSON.stringify(user)
     })
     console.log(response)
+    const res_data = await response.json();
     if(response.ok) {
-      alert("Login successfull")
-      const res_data = await response.json();
+      toast.success("Login successfully")
+      
       console.log("res fron server" , res_data)
       storetokenInLS(res_data.token)
       //localStorage.setItem("token" ,res_data.token)   storing the token into localStorage
@@ -43,6 +45,10 @@ export default function Login() {
       setUser({email: "",password: ""})
       navigate("/")
 
+    }
+    else {
+      toast(res_data.extraDetails ? res_data.extraDetails : res_data.message);
+      console.log("invalide credential")
     }
     }
     catch(error) {

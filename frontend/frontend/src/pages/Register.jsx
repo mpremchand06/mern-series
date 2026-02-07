@@ -1,13 +1,14 @@
 
 import { useState } from "react";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useAuth } from "../store/auth";
+import { toast } from 'react-toastify';
 
 import Img from "../assets/register.jpg";
 export default function Register() {
 
   const navigate = useNavigate()
-  const {storetokenInLS} = useAuth()
+  const { storetokenInLS } = useAuth()
 
   const [user, setUser] = useState({
     username: "",
@@ -37,16 +38,23 @@ export default function Register() {
         },
         body: JSON.stringify(user)
       })
+
       console.log(response)
+      const res_data = await response.json();
+      console.log("res fron server", res_data.extraDetails)
       if (response.ok) {
         // token
-        const res_data = await response.json();
-        console.log("res fron server" , res_data)
+
         storetokenInLS(res_data.token)
-      //  localStorage.setItem("token" ,res_data)   storing the token into localStorage
-        
+        //  localStorage.setItem("token" ,res_data)   storing the token into localStorage
+
         setUser({ username: "", email: "", password: "", phone: "" })  // user input field clear
+        toast.success("Registration Successfully");
         navigate("/login")
+      }
+
+      else {
+        toast.error(res_data.extraDetails ? res_data.extraDetails : res_data.message);
       }
 
     }

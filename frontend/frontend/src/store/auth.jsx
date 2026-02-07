@@ -8,15 +8,17 @@ export const AuthProvider = ({ children }) => {
 
   // 🔹 Tera hi function (fixed)
   const storetokenInLS = (serverToken) => {
-    localStorage.setItem("token", serverToken);
     setToken(serverToken);
+    localStorage.setItem("token", serverToken);
+    
   };
 
   let isLoggedIn = !!token;
+  console.log("isLoggedIn" , isLoggedIn)
 
   // Logout functionality
   const LogoutUser = ()=> {
-    setToken(" ");
+    setToken(null);
     return localStorage.removeItem("token")
   }
 
