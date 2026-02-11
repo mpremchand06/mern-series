@@ -25,7 +25,7 @@ const getAllContacts = async (req, res, next) => {
       return res.status(404).json({ message: "No Contacts Found" });
     }
 
-    return res.status(200).json(contacts); // ✅ FIXED
+    return res.status(200).json(contacts);
   } catch (error) {
     next(error);
   }

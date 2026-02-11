@@ -44,7 +44,9 @@ const register = async (req, res) => {
     }
 };
 
-const login = async (req, res) => {
+
+
+const login = async (req, res , next) => {
     try {
         const { email, password } = req.body
         const userExist = await User.findOne({ email })
@@ -74,5 +76,17 @@ const login = async (req, res) => {
 }
 
 
+const user = async (req, res) => {
+    try{
+        const userData = req.user
+        console.log(userData);
+        return res.status(200).json({msg : userData})
+    }
+    catch(error) {
+        console.log(`error from the user route ${error}`)
+    }
+}
 
-module.exports = { home, register, login}
+
+
+module.exports = { home, register, login , user}
